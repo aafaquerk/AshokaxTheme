@@ -476,7 +476,8 @@ header.header-main {
   background-size: cover !important;
   .tint-dark {
     min-height: 22em;
-    max-height: 350px;
+    height: 500px;
+    background-size: inherit;
     background-image: url("../images/Banner.jpg");
     .grid-manual {
       position: relative;
