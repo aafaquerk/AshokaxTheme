@@ -608,13 +608,15 @@ header.header-main {
   background-color: $course-section-background-color;
   .courses-container {
     max-width: 1128px;
-    padding: 0 1.04167%;
+    padding: 0 5px;
     .highlighted-courses {
       .courses {
         float: none;
         padding: 1.5rem 0;
         .online-courses-head{
             background:#ecebeb;
+            text-align: center;
+            height: 40px;
           }
         h2{
           .course-list-heading{
