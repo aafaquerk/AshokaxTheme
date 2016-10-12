@@ -732,11 +732,12 @@ header.header-main {
     }
   }
   .btn-neutral{
-    border-color: $brand-color;
-    color: $brand-color;
+    border-color: $ashokared;
+    color: $ashokard;
     &:hover{
-      background-color: $brand-color;
+      background-color: $ashokablue;
       color: $white;
+      border-color: $ashokablue;
     }
   }
 }
