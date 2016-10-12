@@ -481,16 +481,11 @@ header.header-main {
     .grid-manual {
       position: relative;
       padding: 100px;
-      .row {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        height: 352px;
-        display: flex;
-        align-items: center;
-          hm{
-              color:$white;
-              font-size:50px;
+      .heading-group {
+        position: relative;
+        hm{         
+            color:$white;
+            font-size:50px;
           }
         p {
           padding-top:5px;
