@@ -337,10 +337,10 @@ from openedx.core.djangolib.js_utils import js_escaped_string
           % endif
         </div>
         <div class="col col-12"><h2>Instructors</h2></div>
-        <% index = 0 %>
-        % for instructors in izip_longest(*([iter(course_details.instructor_info['instructors'])] * 2)):
-        <div class="row instructors">
-          % for instructor in [i for i in instructors if i is not None]:
+          <% index = 0 %>
+          % for instructors in izip_longest(*([iter(course_details.instructor_info['instructors'])] * 2)):
+          <div class="row instructors">
+ % for instructor in [i for i in instructors if i is not None]:
             <% index += 1 %>
             <div class="col col-12 sm-col-12 md-col-6 lg-col-6 xl-col-6">
               <div class="thumbnail">
@@ -370,9 +370,9 @@ from openedx.core.djangolib.js_utils import js_escaped_string
                </div>
             </div>
           % endfor
+          </div>
+          % endfor
         </div>
-        % endfor
-      </div>
     </div>
   </div>
   <div class="light-bg course-about">
