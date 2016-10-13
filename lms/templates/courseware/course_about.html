@@ -33,7 +33,6 @@ from openedx.core.djangolib.js_utils import js_escaped_string
 
   <script type="text/javascript">
   (function() {
-
     (function(require) {
       require(['edx-ui-toolkit/js/utils/html-utils'], function(HtmlUtils) {
         "use strict";
@@ -49,13 +48,11 @@ from openedx.core.djangolib.js_utils import js_escaped_string
                    .attr("type", "hidden")
                    .attr("id", "purchase_workflow")
                    .attr("name", "purchase_workflow").val(purchase_workflow);
-
           HtmlUtils.append("#class_enroll_form", HtmlUtils.HTML($(event_target_input)));
           var enroll_form = $("#class_enroll_form");
           enroll_form.submit();
           event.preventDefault();
         });
-
         % if can_add_course_to_cart:
           add_course_complete_handler = function(jqXHR, textStatus) {
             if (jqXHR.status == 200) {
@@ -69,7 +66,6 @@ from openedx.core.djangolib.js_utils import js_escaped_string
                 location.href = "${reg_then_add_to_cart_link| n, js_escaped_string}";
             }
           };
-
           $("#add_to_cart_post").click(function(event){
             $.ajax({
               url: "${reverse('add_course_to_cart', args=[course.id.to_deprecated_string()]) | n, js_escaped_string}",
@@ -80,7 +76,6 @@ from openedx.core.djangolib.js_utils import js_escaped_string
             event.preventDefault();
           });
         % endif
-
         ## making the conditional around this entire JS block for sanity
         %if settings.FEATURES.get('RESTRICT_ENROLL_BY_REG_METHOD') and course.enrollment_domain:
           <%
@@ -104,9 +99,7 @@ from openedx.core.djangolib.js_utils import js_escaped_string
             $('#register_error').css("display", "block");
           }
         });
-
         %else:
-
         $('#class_enroll_form').on('ajax:complete', function(event, xhr) {
           if(xhr.status == 200) {
             if (xhr.responseText == "") {
@@ -128,17 +121,13 @@ from openedx.core.djangolib.js_utils import js_escaped_string
         %endif
       });
     }).call(this, require || RequireJS.require);
-
   </script>
-
   <%include file="../about_site.html" />
   <script src="${static.url('js/course_info.js')}"></script>
   <script src="${static.url('js/slick.min.js')}"></script>
   <script src="${static.url('js/sticky.js')}"></script>
 </%block>
-
 <%block name="pagetitle">${course.display_name_with_default}</%block>
-
 <section class="course-info" xmlns="http://www.w3.org/1999/html">
   <header class="hero hero-video grid-manual">
     <div class="hero-image" style="background: url('${static.url(course_details.banner_image_asset_path)}') no-repeat center right;">
@@ -172,24 +161,100 @@ from openedx.core.djangolib.js_utils import js_escaped_string
           <div class="col col-12 sm-col-12 md-col-6 sticky-course-title hidden">
             <span>${course_details.title or course.display_name}</span>
           </div>
-          
           <div class="col col-12 sm-col-12 md-col-3 course-run">
             Start Date:
             <span>${course_details.start_date.strftime('%b %-d, %Y')}</span>
           </div>
-          
           <div class="col col-12 sm-col-12 md-col-3 course-run">
             Duration:
             <span>${course_details.duration}</span>
           </div>
-
           <div class="col col-12 sm-col-12 md-col-2">
             Price:
             <span>${course_price}</span>
           </div>
-          
-          <div>
-         
+          <%
+            btn_text = 'Enroll Now'
+            btn_href = '#'
+            btn_class = ''
+            btn_class_bulk = ''
+            btn_id = ''
+          %>
+          % if user.is_authenticated() and registered:
+            <%
+              btn_text = "You are enrolled in this course"
+              btn_class = "disabled"
+            %>
+          % elif in_cart:
+            <%
+              btn_text = "This course is in your cart"
+              btn_href = cart_link
+            %>
+          % elif is_course_full:
+            <%
+              btn_text = "Course is full"
+              btn_class = "disabled"
+              btn_class_bulk = btn_class
+            %>
+          % elif invitation_only and not can_enroll:
+            <%
+              btn_text = "Enrollment in this course is by invitation only"
+              btn_class = "disabled"
+              btn_class_bulk = btn_class
+            %>
+          % elif not is_shib_course and not can_enroll:
+            <%
+              btn_text = "Enrollment is Closed"
+              btn_class = "disabled"
+              btn_class_bulk = btn_class
+            %>
+          % elif can_add_course_to_cart:
+            <%
+              btn_class = "add-to-cart"
+              btn_text = "Enroll Now"
+            %>
+            % if user.is_authenticated():
+              % if user.is_active:
+                <%
+                  btn_href = "#"
+                  btn_id = "add_to_cart_post"
+                %>
+              % else:
+                <%
+                  btn_text = "Please Activate Your Account"
+                  btn_class = "disabled"
+                %>
+              % endif
+            % else:
+              <%
+                btn_href = reg_then_add_to_cart_link
+                btn_id = "reg_then_add_to_cart"
+              %>
+            % endif
+            % if ecommerce_checkout and ecommerce_checkout_link and user.is_authenticated():
+                <%
+                  btn_href = ecommerce_checkout_link
+                %>
+            % endif
+          % else:
+            % if ecommerce_checkout:
+              % if ecommerce_checkout_link:
+                <% btn_href = ecommerce_checkout_link %>
+              % else:
+                <% btn_href="#" %>
+              % endif
+              % if professional_mode:
+                % if user.is_authenticated():
+                  <% btn_class = "add-to-cart" %>
+                % else:
+                  <%
+                    btn_class = "register"
+                    btn_class_bulk = btn_class
+                  %>
+                % endif
+              % endif
+            % endif
+          % endif
           <div class="col col-12 sm-col-12 md-col-4">
             <a href="${btn_href}" id="${btn_id}" class="btn-block btn-success btn-large btn-enroll ${btn_class}">
               ${_(btn_text)}
@@ -208,7 +273,7 @@ from openedx.core.djangolib.js_utils import js_escaped_string
             <div class="course-description">
               <p>${course_details.description}</p>
             </div>
-            <h2> What You will learn learn</h2>
+            <h2> What you'll learn</h2>
             <div class="course-learning">
               <ul class="list-bulleted">
                 % for item in course_details.learning_info:
@@ -217,19 +282,11 @@ from openedx.core.djangolib.js_utils import js_escaped_string
               </ul>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-    
-    
-    
-    <!-- % if can_enroll and not is_course_full:
+          % if can_enroll and not is_course_full:
           <div class="col col-12 sm-col-12 md-col-4 pull-right extras">
             <div class="course-features group-purchase">
               <h2>${_("Want to purchase this course for a group?")} </h2>
               <p>${_("You can purchase enrollment codes for this course to distribute to your team")}</p>
-
               % if ecommerce_bulk_checkout_link:
                 <%
                     url = "mailto:harvardxplus@harvard.edu?Subject={course_id}%20{run}%20Bulk%20Discount".format(course_id=course_details.course_id, run=course_details.run)
@@ -289,9 +346,9 @@ from openedx.core.djangolib.js_utils import js_escaped_string
           % endfor
         </div>
         % endfor
-      </div>-->
-    
-  
+      </div>
+    </div>
+  </div>
   <div class="light-bg course-about">
     <div class="grid-manual grid-container">
       <div class="inner-container">
@@ -304,7 +361,6 @@ from openedx.core.djangolib.js_utils import js_escaped_string
     </div>
   </div>
 </section>
-
 <section class="about-section">
   <div class="about-container"></div>
     <div class="grid-manual">
@@ -317,9 +373,8 @@ from openedx.core.djangolib.js_utils import js_escaped_string
         </div>
     </div>
 </section>
-
 ## Need to put this hidden form on the page so that the registration button works.
-## Since it is no harm to display a hidden form, we display it with the most permissive conditional
+## Since it's no harm to display a hidden form, we display it with the most permissive conditional
 ## which is when the student is not registered.
 %if active_reg_button or is_shib_course:
   <div style="display: none;">
@@ -335,7 +390,6 @@ from openedx.core.djangolib.js_utils import js_escaped_string
     </form>
   </div>
 %endif
-
 % if course_details.intro_video and course_details.video_thumbnail_image_name:
 <section id="video-modal" class="modal modal-custom custom-video-modal">
   <div class="inner-wrapper">
