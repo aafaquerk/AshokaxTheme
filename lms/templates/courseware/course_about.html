@@ -196,6 +196,10 @@ from openedx.core.djangolib.js_utils import js_escaped_string
            % elif not is_shib_course and not can_enroll:
               <span class="register disabled">${_("Enrollment is Closed")}</span>
            % endif
+             <a href="${reg_href}" class="${href_class}">
+            ${_("Enroll in {course_name}").format(course_name=course.display_number_with_default) | h}
+          </a>
+          <div id="register_error"></div>
         </div>
       </div>
     </div>
