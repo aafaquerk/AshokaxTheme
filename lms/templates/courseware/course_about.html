@@ -195,8 +195,8 @@ from openedx.core.djangolib.js_utils import js_escaped_string
 
           % if user.is_authenticated() and registered:
             <%
-              btn_text = "You are enrolled in this course"
-              btn_class = "disabled"
+              btn_text = "View course"
+              btn_href = "course_target"
             %>
 
           % elif in_cart:
@@ -235,7 +235,8 @@ from openedx.core.djangolib.js_utils import js_escaped_string
             % if user.is_authenticated():
               % if user.is_active:
                 <%
-                  btn_href = "#"
+                  btn_text = "View Course"
+                  btn_href = "course_target"
                   btn_id = "add_to_cart_post"
                 %>
               % else:
@@ -305,7 +306,8 @@ from openedx.core.djangolib.js_utils import js_escaped_string
               </ul>
             </div>
           </div>
-          % if can_enroll and not is_course_full:
+    
+    <!-- % if can_enroll and not is_course_full:
           <div class="col col-12 sm-col-12 md-col-4 pull-right extras">
             <div class="course-features group-purchase">
               <h2>${_("Want to purchase this course for a group?")} </h2>
@@ -333,7 +335,7 @@ from openedx.core.djangolib.js_utils import js_escaped_string
             </div>
           </div>
           % endif
-        </div>
+        </div> -->
         <div class="col col-12"><h2>Instructors</h2></div>
         <% index = 0 %>
         % for instructors in izip_longest(*([iter(course_details.instructor_info['instructors'])] * 2)):
