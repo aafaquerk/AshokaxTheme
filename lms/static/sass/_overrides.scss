@@ -1202,11 +1202,9 @@ header.header-main {
        background-color: #ffffff;
        color:$ashokared;
        border-color: $ashokared;
-       a{
-            &:hover{
+         &:hover{
                 background-color: $ashokared;
                 color: #ffffff;
-            }
         }
    }
 }
