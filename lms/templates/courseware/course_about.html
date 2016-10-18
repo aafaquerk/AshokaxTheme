@@ -113,10 +113,10 @@ from openedx.core.lib.courses import course_image_url
       <div class="table">
       <section class="intro">
         <div class="heading-group">
-          <h1>
+          <h2>
             ${course.display_name_with_default_escaped}
-            <button type="button">${course.display_org_with_default | h}</button>
-          </h1>
+            <p class="brand-link">${course.display_org_with_default}</p>
+          </h2>
         </div>
 
         <div class="main-cta">
